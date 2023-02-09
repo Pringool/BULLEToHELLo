@@ -2,8 +2,8 @@
 This game was made as a school project.
 
 ## Libarys used
-Turtle Graphics
-Time
+- Turtle Graphics
+- Time
 
 # Game Rules
 Don't get to close to them or let them hir you
