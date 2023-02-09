@@ -6,7 +6,7 @@ This game was made as a school project.
 - Time
 
 # Game Rules
-Don't get to close to them or let them hir you
+Don't get to close to them or let them hit you
 
 # Keys
 ## Movement
