@@ -3,7 +3,32 @@ from config import *
 from letters import Letters
 import time
 from database import *
+import customtkinter as ctk
 
+
+
+class Leaderboard(ctk.CTk):
+    def __init__(self, database:Database) -> None:
+        super().__init__()
+        self.db = database
+        self.geometry("800x600")
+        self.title("Leaderboard")
+        self.frame = ctk.CTkFrame(self)
+        self.frame.pack(pady=20,padx=20, fill="both", expand=True)
+        self.leaderboard_text = ctk.CTkTextbox(self.frame, width=700, height=550)
+        self.leaderboard_text.pack()
+        self.insert_index=0
+        
+    def get_data_from_database(self):
+        self.data = self.db.read_data()
+        print("Score board")
+
+    
+    def show_leaderboard(self):
+        self.get_data_from_database()
+        for i in self.data:
+            player = '                   '.join(map(str, i))
+            self.leaderboard_text.insert(f"{self.insert_index}.0",player+"\n")
 
 class Player:
     def __init__(self, t:turtle.Turtle) -> None:
@@ -197,7 +222,12 @@ class Enemy:
      
 class Game:
     def __init__(self) -> None:
-        self.player_name = input("Whats your name?: ")
+        #self.player_name = input("Whats your name?: ")
+        self.player_name = window.textinput("What's your name?", " ")
+        if self.player_name is None:
+            print("Goodbye!")
+            window.clear()
+            window.bye()
         window.tracer(1)
         self.letter_turtle = turtle.Turtle()
         self.letter_turtle.hideturtle()
@@ -366,15 +396,16 @@ class Game:
     def __game(self):
         reset_value = 0
         while True:
-            if self.game_pressed:
-                if reset_value == 0:
-                    reset_value += 1
-                    self.letter_turtle.clear()
-                    self.player.turtle.showturtle()
-                    self.enemies.append(Enemy(self.enemy1, 100, 200,self.enemy_health, self.player.turtle))
-                    
-                window.ontimer(self.update(),TIMER)
-            
+            if not self.game_ended:
+                if self.game_pressed:
+                    if reset_value == 0:
+                        reset_value += 1
+                        self.letter_turtle.clear()
+                        self.player.turtle.showturtle()
+                        self.enemies.append(Enemy(self.enemy1, 100, 200,self.enemy_health, self.player.turtle))
+                        
+                    window.ontimer(self.update(),TIMER)
+                
             window.update()
     
     def update(self):
@@ -417,6 +448,7 @@ class Game:
         
     def game_over(self):
         if not self.game_ended:
+            self.letter_turtle.clear()
             self.end_time = time.time()
             self.game_end_time_format = time.strftime("%H:%M:%S", time.localtime())
             self.end_time
@@ -428,13 +460,11 @@ class Game:
                 self.enemies.remove(enemy)
             time_for_game = self.end_time - self.game_start
             self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)  
-            data = self.db.read_data()
-            print("Score board")
-            for i in data:
-                print(i)  
+            Leaderboard(self.db).show_leaderboard()
         
     def game_won(self):
         if not self.game_ended:
+            self.letter_turtle.clear()
             self.end_time = time.time()
             self.game_end_time_format = time.strftime("%H:%M:%S", time.localtime())
             self.game_ended = True
@@ -445,10 +475,7 @@ class Game:
                 self.enemies.remove(enemy)
             time_for_game = self.end_time - self.game_start
             self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)   
-            data = self.db.read_data()
-            print("Score board")
-            for i in data:
-                print(i)
+            Leaderboard(self.db).show_leaderboard()
             
 if __name__ == '__main__':
     window = turtle.Screen()

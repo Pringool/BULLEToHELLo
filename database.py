@@ -17,5 +17,5 @@ class Database:
     
     
     def read_data(self):
-        sql = "SELECT * FROM Turtlegame ORDER BY score DESC;"
+        sql = "SELECT * FROM Turtlegame ORDER BY score ASC;"
         return cur.execute(sql)
