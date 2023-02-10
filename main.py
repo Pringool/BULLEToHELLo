@@ -6,7 +6,6 @@ from database import *
 import customtkinter as ctk
 
 
-
 class Leaderboard(ctk.CTk):
     def __init__(self, database:Database) -> None:
         super().__init__()
@@ -29,6 +28,7 @@ class Leaderboard(ctk.CTk):
         for i in self.data:
             player = '                   '.join(map(str, i))
             self.leaderboard_text.insert(f"{self.insert_index}.0",player+"\n")
+        self.leaderboard_text.insert("0.0","Id                   Wave                   score                   name                   play begin                   play end                   play time\n")
 
 class Player:
     def __init__(self, t:turtle.Turtle) -> None:
@@ -222,7 +222,6 @@ class Enemy:
      
 class Game:
     def __init__(self) -> None:
-        #self.player_name = input("Whats your name?: ")
         self.player_name = window.textinput("What's your name?", " ")
         if self.player_name is None:
             print("Goodbye!")
@@ -488,3 +487,4 @@ if __name__ == '__main__':
         game.start()
     except Exception as e:
         print(e)
+        
