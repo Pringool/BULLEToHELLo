@@ -2,6 +2,8 @@ import turtle
 from config import *
 from letters import Letters
 import time
+from database import *
+
 
 class Player:
     def __init__(self, t:turtle.Turtle) -> None:
@@ -195,6 +197,7 @@ class Enemy:
      
 class Game:
     def __init__(self) -> None:
+        self.player_name = input("Whats your name?: ")
         window.tracer(1)
         self.letter_turtle = turtle.Turtle()
         self.letter_turtle.hideturtle()
@@ -203,6 +206,7 @@ class Game:
         window.tracer(0)
         self.game_pressed = False
         self.score = 0
+        self.game_ended = False
         
         self.enemy_health = 3
         self.enemies = []
@@ -226,8 +230,8 @@ class Game:
         self.enemy5.ht()
         
         self.enemy6 = turtle.Turtle()
-        self.enemy2.pu()
-        self.enemy2.ht()
+        self.enemy6.pu()
+        self.enemy6.ht()
         
         self.enemy7 = turtle.Turtle()
         self.enemy7.pu()
@@ -297,12 +301,14 @@ class Game:
             'wave40': 2,
             'wave40': 2,
             'wave40': 2,
-            'wave40': 11,
+            'wave41': 11
         }
         
         self.wave_index = 0
         all_waves = list(self.waves.items())
         self.current_wave = all_waves[self.wave_index]
+        
+        self.db = Database()
         
     def start(self):
         player_turtle = turtle.Turtle("square")
@@ -326,6 +332,8 @@ class Game:
         window.onkey(self.game_over, "g")
         window.listen()
         
+        self.game_start = time.time()
+        self.game_start_time_format = time.strftime("%H:%M:%S", time.localtime())
         self.__game()
         
         
@@ -408,17 +416,39 @@ class Game:
                 self.game_over()
         
     def game_over(self):
-        self.lt.print_text(f"Game OVER/Score {str(self.score)}", "white")
-        self.player.turtle.ht()
-        for enemy in self.enemies:
-            enemy.turtle.ht()
-            self.enemies.remove(enemy)
+        if not self.game_ended:
+            self.end_time = time.time()
+            self.game_end_time_format = time.strftime("%H:%M:%S", time.localtime())
+            self.end_time
+            self.game_ended = True
+            self.lt.print_text(f"Game OVER/Score {str(self.score)}", "white")
+            self.player.turtle.ht()
+            for enemy in self.enemies:
+                enemy.turtle.ht()
+                self.enemies.remove(enemy)
+            time_for_game = self.end_time - self.game_start
+            self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)  
+            data = self.db.read_data()
+            print("Score board")
+            for i in data:
+                print(i)  
+        
     def game_won(self):
-        self.lt.print_text(f"Game WON/Score {str(self.score)}", "white")
-        self.player.turtle.ht()
-        for enemy in self.enemies:
-            enemy.turtle.ht()
-            self.enemies.remove(enemy)
+        if not self.game_ended:
+            self.end_time = time.time()
+            self.game_end_time_format = time.strftime("%H:%M:%S", time.localtime())
+            self.game_ended = True
+            self.lt.print_text(f"Game WON/Score {str(self.score)}", "white")
+            self.player.turtle.ht()
+            for enemy in self.enemies:
+                enemy.turtle.ht()
+                self.enemies.remove(enemy)
+            time_for_game = self.end_time - self.game_start
+            self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)   
+            data = self.db.read_data()
+            print("Score board")
+            for i in data:
+                print(i)
             
 if __name__ == '__main__':
     window = turtle.Screen()
@@ -429,6 +459,5 @@ if __name__ == '__main__':
     try:
         game = Game()
         game.start()
-    except Exception:
-        print("Doch")
-    
+    except Exception as e:
+        print(e)
