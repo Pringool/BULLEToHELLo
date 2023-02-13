@@ -10,11 +10,11 @@ class Leaderboard(ctk.CTk):
     def __init__(self, database:Database) -> None:
         super().__init__()
         self.db = database
-        self.geometry("800x600")
+        self.geometry("900x600")
         self.title("Leaderboard")
         self.frame = ctk.CTkFrame(self)
         self.frame.pack(pady=20,padx=20, fill="both", expand=True)
-        self.leaderboard_text = ctk.CTkTextbox(self.frame, width=700, height=550)
+        self.leaderboard_text = ctk.CTkTextbox(self.frame, width=750, height=550)
         self.leaderboard_text.pack()
         self.insert_index=0
         
@@ -26,9 +26,9 @@ class Leaderboard(ctk.CTk):
     def show_leaderboard(self):
         self.get_data_from_database()
         for i in self.data:
-            player = '                   '.join(map(str, i))
+            player = '         |          '.join(map(str, i))
             self.leaderboard_text.insert(f"{self.insert_index}.0",player+"\n")
-        self.leaderboard_text.insert("0.0","Id                   Wave                   score                   name                   play begin                   play end                   play time\n")
+        self.leaderboard_text.insert("0.0","Id         |          Wave         |          score         |          name         |          play begin         |          play end         |          play time\n")
 
 class Player:
     def __init__(self, t:turtle.Turtle) -> None:
