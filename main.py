@@ -372,7 +372,7 @@ class Game:
             self.get_current_wave()
             self.lt.print_text(f"Next WAVE:/{self.current_wave[0]}", "white")
             window.ontimer(self.letter_turtle.clear, WAVE_DELAY)
-            self.spawn_enemy(self.current_wave[1])
+            window.ontimer(self.spawn_enemy, WAVE_DELAY)
             
             
     def get_current_wave(self):
@@ -384,8 +384,8 @@ class Game:
         else:
             self.game_won()
      
-    def spawn_enemy(self, amount:int):
-        for i in range(0, amount):
+    def spawn_enemy(self):
+        for i in range(0, self.current_wave[1]):
             self.all_enemies[i].st()
             self.enemies.append(Enemy(self.all_enemies[i], random.randint(0, 200), random.randint(100,300),self.enemy_health, self.player.turtle))
     
