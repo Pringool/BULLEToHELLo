@@ -3,7 +3,7 @@ This game was made as a school project.
 
 ## Libarys used
 - Turtle Graphics
-- Time
+- time
 - customtkinter
 
 # Game Rules
