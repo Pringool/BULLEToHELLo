@@ -223,7 +223,7 @@ class Enemy:
 class Game:
     def __init__(self) -> None:
         self.player_name = window.textinput("What's your name?", " ")
-        if self.player_name is None:
+        if self.player_name is None or self.player_name == "":
             print("Goodbye!")
             window.clear()
             window.bye()
@@ -338,7 +338,7 @@ class Game:
         self.current_wave = all_waves[self.wave_index]
         
         self.db = Database()
-        
+        self.leaderboard = Leaderboard(self.db)
     def start(self):
         player_turtle = turtle.Turtle("square")
         player_turtle.penup()
@@ -459,7 +459,8 @@ class Game:
                 self.enemies.remove(enemy)
             time_for_game = self.end_time - self.game_start
             self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)  
-            Leaderboard(self.db).show_leaderboard()
+            self.leaderboard.show_leaderboard()
+            self.leaderboard.mainloop()
         
     def game_won(self):
         if not self.game_ended:
@@ -474,7 +475,8 @@ class Game:
                 self.enemies.remove(enemy)
             time_for_game = self.end_time - self.game_start
             self.db.add_to_database(self.current_wave[0], self.score, self.player_name, self.game_start_time_format, self.game_end_time_format, time_for_game)   
-            Leaderboard(self.db).show_leaderboard()
+            self.leaderboard.show_leaderboard()
+            self.leaderboard.mainloop()
             
 if __name__ == '__main__':
     window = turtle.Screen()
