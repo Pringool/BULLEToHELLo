@@ -21,3 +21,6 @@ Don't get to close to them or let them hit you
   - d
 ## Shoot
 - L
+
+# Mentions
+The Letters.py is from https://github.com/adityadroid/Alphabeter mine is a bit different
