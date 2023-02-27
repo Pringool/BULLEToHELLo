@@ -23,4 +23,5 @@ Don't get to close to them or let them hit you
 - L
 
 # Mentions
-The Letters.py is from https://github.com/adityadroid/Alphabeter mine is a bit different
+The Original Letters.py is from https://github.com/adityadroid/Alphabeter
+I changed it to fit better
